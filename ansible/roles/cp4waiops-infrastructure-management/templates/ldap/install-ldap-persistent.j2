@@ -344,7 +344,7 @@ spec:
             - name: LDAP_DOMAIN
               value: "{{ current_cp4waiops_feature.ldap_domain }}"
             - name: LDAP_ADMIN_PASSWORD
-              value: "{{ current_cp4waiops_feature.ldap_admin_password }}"
+              value: "{{ current_cp4waiops_feature.current_ldap_admin_password }}"
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
               value: "false"
       volumes:
