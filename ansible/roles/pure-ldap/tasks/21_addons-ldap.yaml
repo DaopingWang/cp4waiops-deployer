@@ -1,4 +1,3 @@
-
 # *************************************************************************************************************************************************
 # --------------------------------------------------------------------------------------------------------------------------------------
 # Install ADDONS
@@ -10,52 +9,21 @@
 # --------------------------------------------------------------------------------------------------------------------------------------
 
 - name: 🛰️  START - INSTALL OPENLDAP
-  debug: 
-    msg="{{ lookup('pipe','date +%d.%m.%Y---%H:%M:%S') }}"
-
-
-- name: Log
-  shell: |
-    export MESSAGE="Installing Open LDAP"
-    export currentDate=$(date +%Y-%m-%d_%H:%M)
-    echo "---------------------------------------------------------------------------------------------------------------------------------------------------" >> ../install_{{current_cp4waiops_feature.kind}}.log
-    echo $currentDate" - "$MESSAGE  >> ../install_{{current_cp4waiops_feature.kind}}.log
-  ignore_errors: true
-
-
-
+  debug: msg="{{ lookup('pipe','date +%d.%m.%Y---%H:%M:%S') }}"
 
 - name: 🚀 LDAP - Set LDAP ADMIN Password from instance configuration
-  set_fact: current_ldap_admin_password={{current_cp4waiops_feature.ldap_admin_password  | default('P4ssw0rd!')}}
-  when: global_config.global_password is undefined or global_config.global_password=="NONE"
-
-
-- name: 🚀 LDAP - Set LDAP ADMIN Password from global configuration
-  set_fact: current_ldap_admin_password={{global_config.global_password}}
-  when: global_config.global_password is defined and global_config.global_password!="NONE"
-
+  set_fact: current_ldap_admin_password={{ldap_admin_password  | default('P4ssw0rd!')}}
 
 - name: 🟣  LDAP -  Demo UI Password {{current_ldap_admin_password}}
   debug:
     var: current_ldap_admin_password
 
-
 - name: 🚀 LDAP - Set LDAP USERS Password from instance configuration
-  set_fact: current_ldap_user_password={{current_cp4waiops_feature.ldap_user_password  | default('P4ssw0rd!')}}
-  when: global_config.global_password is undefined or global_config.global_password=="NONE"
-
-
-- name: 🚀 LDAP - Set LDAP USERS Password from global configuration
-  set_fact: current_ldap_user_password={{global_config.global_password}}
-  when: global_config.global_password is defined and global_config.global_password!="NONE"
-
+  set_fact: current_ldap_user_password={{ldap_user_password  | default('P4ssw0rd!')}}
 
 - name: 🟣  LDAP -  Demo UI Password {{current_ldap_user_password}}
   debug:
     var: current_ldap_user_password
-
-
-
 
 # - name: ADDONS -             ❎ Remove old OpenLDAP
 #   community.kubernetes.k8s:
@@ -65,7 +33,7 @@
 
 - name: LDAP -               🚀 Create OpenLDAP namespace
   community.kubernetes.k8s:
-    name: "{{ current_cp4waiops_feature.ldap_namespace }}"
+    name: "{{ ldap_namespace }}"
     api_version: v1
     kind: Namespace
     state: present
@@ -84,19 +52,14 @@
 # --------------------------------------------------------------------------------------------------------------------------------------
 # Wait for LDAP ready
 # --------------------------------------------------------------------------------------------------------------------------------------
-- name: 🕦 CHECK -  Wait for 2 pods Running in namespace {{ current_cp4waiops_feature.ldap_namespace }} (this might take some time)
+- name: 🕦 CHECK -  Wait for 2 pods Running in namespace {{ ldap_namespace }} (this might take some time)
   shell: |
-    NUM_PODS=$(oc get po -n {{ current_cp4waiops_feature.ldap_namespace }} | grep openldap| grep Running| wc -l)
+    NUM_PODS=$(oc get po -n {{ ldap_namespace }} | grep openldap| grep Running| wc -l)
     echo $NUM_PODS
   register: kubectl_num_pods
   until: kubectl_num_pods.stdout|int >= 2
   retries: 100
   delay: 15
 
-
-
 - name: 🕦 TIMESTAMP - END INSTALLATION - INSTALL OPENLDAP
-  debug: 
-    msg="{{ lookup('pipe','date +%d.%m.%Y---%H:%M:%S') }}"
-
-
+  debug: msg="{{ lookup('pipe','date +%d.%m.%Y---%H:%M:%S') }}"

@@ -30,65 +30,18 @@
   #vars_files: ./configs/cp4waiops-roks-all.yaml
 
   tasks:
-    - name: 🚀 MAIN INSTALLATION LOOP - Install Module
-      debug:
-        msg:
-          - "***************************************************************************************************************************************************"
-          - "***************************************************************************************************************************************************"
-          - "***************************************************************************************************************************************************"
-          - "***************************************************************************************************************************************************"
-          - "                                                                                                                                                   "
-          - "       CloudPak for Watson AIOps - INSTALLATION                                                                                          "
-          - "                                                                                                                                                   "
-          - "***************************************************************************************************************************************************"
-          - "***************************************************************************************************************************************************"
-          - "***************************************************************************************************************************************************"
-        #verbosity: 2
-
-    - name: 🛠️  Config File Path
-      debug:
-        var: config_file_path
-        #verbosity: 2
-
-    - name: 🛠️  Ansible check config file exists
-      stat:
-        path: "{{config_file_path}}"
-      register: p
-
-    - name: 🛠️  Ansible check config file exists
-      debug:
-        msg: "  ✅ Config File exists..."
-        #verbosity: 2
-      when: p.stat.exists
-
-    - name: 🛠️  Fail if not exists
-      fail: msg="The specified config file {{config_file_path}} does not exist"
-      when: p.stat.exists == False
-
-    - name: 🛠️  Import Config File
-      include_vars:
-        file: "{{config_file_path}}"
-        name: all_config
-
-    # - name: 🟢🟢🟢  Show Config File
-    #   debug:
-    #     var: all_config
-    #     verbosity: 2
-
-    # - name: 🛠️  Get Global Config
-    #   set_fact: global_config={{ all_config.global_config | default([]) }}
-    # - name: 🟢🟢🟢  Show Global Config
-    #   debug:
-    #     var: global_config
-    #     verbosity: 2
-
-    # - name: 🛠️  Get Openshift Config
-    #   set_fact: openshift_cluster={{ all_config.openshift | default([]) }}
-    # - name: 🟢🟢🟢  Show Openshift Config
-    #   debug:
-    #     var: openshift_cluster
-    #     verbosity: 2
-
     - name: install openLDAP
       include_role:
         name: pure-ldap
+      vars:
+        # ldap domain
+        ldap_domain: ibm.com
+        # ldap base
+        ldap_base: dc=ibm,dc=com
+        # ldap admin password
+        ldap_admin_password: P4ssw0rd!
+        # Ldap password for all users
+        ldap_user_password: P4ssw0rd!
+        # ldap namespace
+        ldap_namespace: openldap
+        project: cp4waiops

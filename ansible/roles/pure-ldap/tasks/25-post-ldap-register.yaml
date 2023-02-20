@@ -11,14 +11,6 @@
 - name: 🛰️  START - LDAP REGISTER
   debug: msg="{{ lookup('pipe','date +%d.%m.%Y---%H:%M:%S') }}"
 
-- name: Log
-  shell: |
-    export MESSAGE="Integrate AIManager with LDAP"
-    export currentDate=$(date +%Y-%m-%d_%H:%M)
-    echo "---------------------------------------------------------------------------------------------------------------------------------------------------" >> ../install_{{current_cp4waiops_feature.kind}}.log
-    echo $currentDate" - "$MESSAGE  >> ../install_{{current_cp4waiops_feature.kind}}.log
-  ignore_errors: true
-
 # *************************************************************************************************************************************************
 # --------------------------------------------------------------------------------------------------------------------------------------
 # Get Cluster FQDN
@@ -26,7 +18,7 @@
 # *************************************************************************************************************************************************
 
 - name: 🚀 LDAPREGISTER - Set LDAP ADMIN Password from instance configuration
-  set_fact: current_ldap_admin_password={{current_cp4waiops_feature.ldap_admin_password  | default('P4ssw0rd!')}}
+  set_fact: current_ldap_admin_password={{ldap_admin_password  | default('P4ssw0rd!')}}
   when: global_config.global_password is undefined or global_config.global_password=="NONE"
 
 - name: 🚀 LDAPREGISTER - Set LDAP ADMIN Password from global configuration
@@ -38,7 +30,7 @@
     var: current_ldap_admin_password
 
 - name: 🚀 LDAPREGISTER - Set LDAP USERS Password from instance configuration
-  set_fact: current_ldap_user_password={{current_cp4waiops_feature.ldap_user_password  | default('P4ssw0rd!')}}
+  set_fact: current_ldap_user_password={{ldap_user_password  | default('P4ssw0rd!')}}
   when: global_config.global_password is undefined or global_config.global_password=="NONE"
 
 - name: 🚀 LDAPREGISTER - Set LDAP USERS Password from global configuration
@@ -84,19 +76,12 @@
     var: LDAPS.stdout_lines
     #verbosity: 2
 
-- name: Log
-  shell: |
-    export MESSAGE="   Register OpenLDAP Server"
-    export currentDate=$(date +%Y-%m-%d_%H:%M)
-    echo $currentDate" - "$MESSAGE  >> ../install_{{current_cp4waiops_feature.kind}}.log
-  ignore_errors: true
-
 - name: 🚀 LDAPREGISTER - Create LDAP Integration
   block:
     - name: 🚀 LDAPREGISTER -           📥 Register LDAP Server
       shell:
         #echo 'cloudctl iam ldap-create "LDAP" --basedn "{{ LDAP_BASE }}" --server "ldap://openldap.default:389" --binddn "cn=admin,{{ LDAP_BASE }}" --binddn-password "{{ current_ldap_admin_password }}" -t "Custom" --group-filter "(&(cn=%v)(objectclass=groupOfUniqueNames))" --group-id-map "*:cn" --group-member-id-map "groupOfUniqueNames:uniqueMember" --user-filter "(&(uid=%v)(objectclass=Person))" --user-id-map "*:uid"'
-        cloudctl iam ldap-create "LDAP" --basedn {{ current_cp4waiops_feature.ldap_base }} --server ldap://openldap.{{ current_cp4waiops_feature.ldap_namespace }}:389 --binddn cn=admin,{{ current_cp4waiops_feature.ldap_base }} --binddn-password {{ current_ldap_admin_password }} -t "Custom" --group-filter "(&(cn=%v)(objectclass=groupOfUniqueNames))" --group-id-map "*:cn" --group-member-id-map "groupOfUniqueNames:uniqueMember" --user-filter "(&(uid=%v)(objectclass=Person))" --user-id-map "*:uid"
+        cloudctl iam ldap-create "LDAP" --basedn {{ ldap_base }} --server ldap://openldap.{{ ldap_namespace }}:389 --binddn cn=admin,{{ ldap_base }} --binddn-password {{ current_ldap_admin_password }} -t "Custom" --group-filter "(&(cn=%v)(objectclass=groupOfUniqueNames))" --group-id-map "*:cn" --group-member-id-map "groupOfUniqueNames:uniqueMember" --user-filter "(&(uid=%v)(objectclass=Person))" --user-id-map "*:uid"
       ignore_errors: true
       register: LOGIN
     - name: 🟣  OUTPUT
@@ -133,13 +118,6 @@
   #   register: TEAMS
   #   ignore_errors: true
   when: LDAPS.stdout_lines|length == 0
-
-- name: Log
-  shell: |
-    export MESSAGE="   Create Users and Groups"
-    export currentDate=$(date +%Y-%m-%d_%H:%M)
-    echo $currentDate" - "$MESSAGE  >> ../install_{{current_cp4waiops_feature.kind}}.log
-  ignore_errors: true
 
 - name: 🚀 LDAPREGISTER - CREATE AI Manager Groups and Users
   shell: |

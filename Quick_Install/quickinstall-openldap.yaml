@@ -94,7 +94,7 @@ spec:
 
               echo "------------------------------------------------------------------------------------------------------------------------------"
               echo " 🚀 Starting Installation"
-              ansible-playbook ./ansible/openLDAP-playbook.yaml -e "config_file_path=$CONFIG" -e cp_entitlement_key=$ENTITLED_REGISTRY_KEY
+              ansible-playbook ./ansible/openLDAP-playbook.yaml
               echo ""
               echo ""
               echo "*****************************************************************************************************************************"
@@ -111,11 +111,5 @@ spec:
           env:
             - name: INSTALL_REPO
               value: "https://github.com/DaopingWang/cp4waiops-deployer.git"
-            - name: CONFIG
-              #value : "./configs/cp4waiops-roks-aimanager-all-34.yaml"
-              value: "./configs/pure-ldap-config.yaml"
-              # The pull token for cp.icr.com from https://myibm.ibm.com/products-services/containerlibrary
-            - name: ENTITLED_REGISTRY_KEY
-              value: <entitlement-key>
       restartPolicy: Never
   backoffLimit: 4
