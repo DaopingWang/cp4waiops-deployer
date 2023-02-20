@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openldap-pvc
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openldap-slapd-pvc
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -32,7 +32,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: openldap-seedusers
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 data:
   seedusers.ldif: |    
     dn: ou=Groups,dc=ibm,dc=com
@@ -272,7 +272,7 @@ metadata:
   labels:
     app: openldap
   name: openldap
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   ports:
     - port: 389
@@ -285,7 +285,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: openldap-admin
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   ports:
   - port: 80
@@ -298,7 +298,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openldap
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
   labels:
     app: openldap
 spec:
@@ -342,9 +342,9 @@ spec:
             - name: LDAP_ORGANISATION
               value: "demo"
             - name: LDAP_DOMAIN
-              value: "{{ current_cp4waiops_feature.ldap_domain }}"
+              value: "{{ ldap_domain }}"
             - name: LDAP_ADMIN_PASSWORD
-              value: "{{ current_cp4waiops_feature.ldap_admin_password }}"
+              value: "{{ ldap_admin_password }}"
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
               value: "false"
       volumes:
@@ -367,7 +367,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openldap-admin
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   replicas: 1
   selector:
@@ -394,7 +394,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: openldap
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
   labels:
     app: openldap
 spec:
@@ -409,7 +409,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: openldap-admin
-  namespace: {{ current_cp4waiops_feature.ldap_namespace }}
+  namespace: {{ ldap_namespace }}
 spec:
   to:
     kind: Service
