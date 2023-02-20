@@ -131,7 +131,7 @@
 
     echo "       🛠️   Getting ZEN Token"
 
-    ZEN_API_HOST=$(oc get route -n $WAIOPS_NAMESPACE cpd -o jsonpath='{.spec.host}')
+    ZEN_API_HOST={{project}}
     ZEN_LOGIN_URL="https://${ZEN_API_HOST}/v1/preauth/signin"
     LOGIN_USER=admin
     LOGIN_PASSWORD="$(oc get secret admin-user-details -n $WAIOPS_NAMESPACE -o jsonpath='{ .data.initial_admin_password }' | base64 --decode)"
@@ -160,54 +160,54 @@
 
     echo "Sucessfully logged in" 1>&2
 
-    echo ""
+    # echo ""
 
-    echo "***************************************************************************************************************************************************"
-    echo "   🛠️   Create Demo Admin Role"
-    echo "     "	
-    export result=$(curl -X "POST" -k "https://$ROUTE/usermgmt/v1/role" \
-      -H "Authorization: bearer $ZEN_TOKEN" \
-      -H 'Content-Type: application/json; charset=utf-8' \
-      -d '{
-            "role_name": "Demo Admin",
-          "description": "Demo Admin",
-          "permissions": [
-            "administrator",
-            "can_provision",
-            "secure_tunnel_network",
-            "secure_tunnel_port_forwarding",
-            "secure_tunnel_connector_install",
-            "secure_tunnel_create_template",
-            "secure_tunnel_renew_cert",
-            "secure_tunnel_view_audit_log",
-            "waiops_manage_integrations",
-            "waiops_view_integrations",
-            "waiops_view_topologies",
-            "waiops_manage_topology_templates",
-            "waiops_manage_topology_comments",
-            "waiops_manage_applications",
-            "waiops_manage_business_context",
-            "waiops_manage_topology_tools",
-            "waiops_manage_topology_presentation",
-            "waiops_manage_topology_rules",
-            "waiops_manage_advanced_topology_settings",
-            "waiops_view_aimodels_status",
-            "waiops_manage_aimodels",
-            "waiops_view_operational_policies",
-            "waiops_manage_runbooks",
-            "waiops_use_runbooks",
-            "waiops_author_runbooks",
-            "waiops_administer_runbooks",
-            "waiops_view_operational_data",
-            "waiops_edit_operational_policies",
-            "waiops_delete_operational_policies",
-            "waiops_use_insights_dashboard"
-          ]
-    }')
-    echo "      🔎 Result: "
-    echo "       "$result|jq "._messageCode_" | sed 's/^/          /'
-    export demo_admin_id=$(echo $result|jq -r ".id")
-    echo "       Demo Admin Role ID: $demo_admin_id" | sed 's/^/          /'
+    # echo "***************************************************************************************************************************************************"
+    # echo "   🛠️   Create Demo Admin Role"
+    # echo "     "	
+    # export result=$(curl -X "POST" -k "https://$ROUTE/usermgmt/v1/role" \
+    #   -H "Authorization: bearer $ZEN_TOKEN" \
+    #   -H 'Content-Type: application/json; charset=utf-8' \
+    #   -d '{
+    #         "role_name": "Demo Admin",
+    #       "description": "Demo Admin",
+    #       "permissions": [
+    #         "administrator",
+    #         "can_provision",
+    #         "secure_tunnel_network",
+    #         "secure_tunnel_port_forwarding",
+    #         "secure_tunnel_connector_install",
+    #         "secure_tunnel_create_template",
+    #         "secure_tunnel_renew_cert",
+    #         "secure_tunnel_view_audit_log",
+    #         "waiops_manage_integrations",
+    #         "waiops_view_integrations",
+    #         "waiops_view_topologies",
+    #         "waiops_manage_topology_templates",
+    #         "waiops_manage_topology_comments",
+    #         "waiops_manage_applications",
+    #         "waiops_manage_business_context",
+    #         "waiops_manage_topology_tools",
+    #         "waiops_manage_topology_presentation",
+    #         "waiops_manage_topology_rules",
+    #         "waiops_manage_advanced_topology_settings",
+    #         "waiops_view_aimodels_status",
+    #         "waiops_manage_aimodels",
+    #         "waiops_view_operational_policies",
+    #         "waiops_manage_runbooks",
+    #         "waiops_use_runbooks",
+    #         "waiops_author_runbooks",
+    #         "waiops_administer_runbooks",
+    #         "waiops_view_operational_data",
+    #         "waiops_edit_operational_policies",
+    #         "waiops_delete_operational_policies",
+    #         "waiops_use_insights_dashboard"
+    #       ]
+    # }')
+    # echo "      🔎 Result: "
+    # echo "       "$result|jq "._messageCode_" | sed 's/^/          /'
+    # export demo_admin_id=$(echo $result|jq -r ".id")
+    # echo "       Demo Admin Role ID: $demo_admin_id" | sed 's/^/          /'
 
 
 
