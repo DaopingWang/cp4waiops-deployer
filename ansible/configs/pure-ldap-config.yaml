@@ -21,7 +21,7 @@ global_config:
   # Use this Password for all Instances
   global_password: P4ssw0rd!
   # Set this value to True to accept all licenses
-  accept_all_licenses: False
+  accept_all_licenses: True
 
 openshift:
   - name: "mycluster"
@@ -34,11 +34,11 @@ openshift:
         # Alternatively use
         #storage_name: ibm-roks-storage
         #storage_type: custom
-        #ocp_storage_class_file: ibmc-file-gold-gid
-        #ocp_storage_class_block: ibmc-block-gold
+        ocp_storage_class_file: ibmc-file-gold-gid
+        ocp_storage_class_block: ibmc-block-gold
 
 cp4waiops:
-  - project: cp4waiops-infra
+  - project: cp4waiops
     instances:
       # --------------------------------------------------------------------------------------------------------------------------------------
       # CP4WAIOPS Infrastructure Management
@@ -90,14 +90,14 @@ cp4waiops:
 
 # Override the Storage Class auto detection (not_configured, ibmc-file-gold-gid, rook-cephfs, nfs-client, ...)
 #storage_class_file: automatic
-#storage_class_file: ibmc-file-gold-gid               # ROKS
+storage_class_file: ibmc-file-gold-gid # ROKS
 #storage_class_file: ocs-storagecluster-cephfs        # ODF
 #storage_class_file: ibmc-vpc-block-10iops-tier       # IBM VPC
 #storage_class_file: rook-cephfs                      # FYRE
 #storage_class_file: nfs-client                       # TEC
 
 #storage_class_block: automatic
-#storage_class_block: ibmc-block-gold                 # ROKS
+storage_class_block: ibmc-block-gold # ROKS
 #storage_class_block: ocs-storagecluster-ceph-rbd     # ODF
 #storage_class_block: ibmc-vpc-block-10iops-tier      # IBM VPC
 #storage_class_block: rook-cephfs                     # FYRE
