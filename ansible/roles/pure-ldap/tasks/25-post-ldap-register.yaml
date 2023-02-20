@@ -134,7 +134,8 @@
     ZEN_API_HOST={{project}}
     ZEN_LOGIN_URL="https://${ZEN_API_HOST}/v1/preauth/signin"
     LOGIN_USER=admin
-    LOGIN_PASSWORD="$(oc get secret admin-user-details -n $WAIOPS_NAMESPACE -o jsonpath='{ .data.initial_admin_password }' | base64 --decode)"
+    # LOGIN_PASSWORD="$(oc get secret admin-user-details -n $WAIOPS_NAMESPACE -o jsonpath='{ .data.initial_admin_password }' | base64 --decode)"
+    LOGIN_PASSWORD="$(oc -n ibm-common-services get secret platform-auth-idp-credentials -o jsonpath='{.data.admin_password}' | base64 -d)"
 
     ZEN_LOGIN_RESPONSE=$(
     curl -k \
