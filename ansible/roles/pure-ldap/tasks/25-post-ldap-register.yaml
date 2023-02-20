@@ -123,7 +123,7 @@
   shell: |
     set -x
 
-    export WAIOPS_NAMESPACE=$(oc get po -A|grep aiops-orchestrator-controller |awk '{print$1}')
+    export WAIOPS_NAMESPACE={{project}}
     echo "       🛠️   Get Route"
     export ROUTE=$(oc get route -n $WAIOPS_NAMESPACE cpd  -o jsonpath={.spec.host})          
     echo "        Route: $ROUTE"
@@ -131,7 +131,7 @@
 
     echo "       🛠️   Getting ZEN Token"
 
-    ZEN_API_HOST={{project}}
+    ZEN_API_HOST=$(oc get route -n $WAIOPS_NAMESPACE cpd -o jsonpath='{.spec.host}')
     ZEN_LOGIN_URL="https://${ZEN_API_HOST}/v1/preauth/signin"
     LOGIN_USER=admin
     # LOGIN_PASSWORD="$(oc get secret admin-user-details -n $WAIOPS_NAMESPACE -o jsonpath='{ .data.initial_admin_password }' | base64 --decode)"
