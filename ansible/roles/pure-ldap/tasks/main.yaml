@@ -29,8 +29,32 @@
 # INSTALL ADDONS
 # ---------------------------------------------------------------------------------------------------------------------------------------------------"
 # Install OpenLDAP
-- name: 📥  21_addons-ldap
-  include_tasks: 21_addons-ldap.yaml
+# - name: 📥  21_addons-ldap
+#   include_tasks: 21_addons-ldap.yaml
+
+- name: 31_multi-ldap-instance
+  include_tasks: 31_multi-ldap-instance.yaml
+  loop:
+    - {
+        ldap_template: "./templates/ldap/install-ldap-acme.j2",
+        ldap_namespace: "openldap-acme",
+        ldap_domain: "acme.com",
+        ldap_base: "dc=acme,dc=com",
+        ldap_admin_password: password,
+        ldap_user_password: password,
+        ldap_organization: admin,
+      }
+    - {
+        ldap_template: "./templates/ldap/install-ldap-digital.j2",
+        ldap_namespace: "openldap-digital",
+        ldap_domain: "digital.com",
+        ldap_base: "dc=digital,dc=com",
+        ldap_admin_password: password,
+        ldap_user_password: password,
+        ldap_organization: admin,
+      }
+  loop_control:
+    loop_var: ldap_installconfig_json
 # # Create Service Accoutn and USER
 # - name: 📥   22_addons-user
 #   include_tasks: 22_addons-user.yaml

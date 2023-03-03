@@ -3,7 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openldap-pvc
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -17,7 +17,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: openldap-slapd-pvc
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   accessModes:
     - ReadWriteOnce
@@ -32,108 +32,9 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: openldap-seedusers
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 data:
   seedusers.ldif: |    
-    # digital
-    dn: ou=Groups,dc=digital,dc=com
-    changetype: add
-    objectclass: organizationalUnit
-    ou: Groups
-    
-    # Add People OU
-    dn: ou=People,dc=digital,dc=com
-    changetype: add
-    objectclass: organizationalUnit
-    ou: People
-    
-    # Add users
-    dn: uid=digitaliam,ou=People,dc=digital,dc=com
-    changetype: add
-    objectclass: inetOrgPerson
-    objectclass: organizationalPerson
-    objectclass: person
-    objectclass: top
-    uid: digitaliam
-    displayname: digitaliam
-    sn: digitaliam
-    cn: digitaliam
-    mail: digitaliam@digital.com
-    userpassword: password
-    
-    dn: uid=digitaldeployer,ou=People,dc=digital,dc=com
-    changetype: add
-    objectclass: inetOrgPerson
-    objectclass: organizationalPerson
-    objectclass: person
-    objectclass: top
-    uid: digitaldeployer
-    displayname: digitaldeployer
-    sn: digitaldeployer
-    cn: digitaldeployer
-    mail: digitaldeployer@digital.com
-    userpassword: password
-    
-    dn: uid=digitaladmin,ou=People,dc=digital,dc=com
-    changetype: add
-    objectclass: inetOrgPerson
-    objectclass: organizationalPerson
-    objectclass: person
-    objectclass: top
-    uid: digitaladmin
-    displayname: digitaladmin
-    sn: digitaladmin
-    cn: digitaladmin
-    mail: digitaladmin@digital.com
-    userpassword: password
-    
-    dn: uid=digitalaccounting,ou=People,dc=digital,dc=com
-    changetype: add
-    objectclass: inetOrgPerson
-    objectclass: organizationalPerson
-    objectclass: person
-    objectclass: top
-    uid: digitalaccounting
-    displayname: digitalaccounting
-    sn: digitalaccounting
-    cn: digitalaccounting
-    mail: digitalaccounting@digital.com
-    userpassword: password
-    
-    # Create user group
-    dn: cn=digitaladmin,ou=Groups,dc=digital,dc=com
-    changetype: add
-    cn: digitaladmin
-    objectclass: groupOfUniqueNames
-    objectclass: top
-    owner: cn=admin,dc=ibm,dc=com
-    uniquemember: uid=digitaladmin,ou=People,dc=digital,dc=com
-    
-    dn: cn=digitaliam,ou=Groups,dc=digital,dc=com
-    changetype: add
-    cn: digitaliam
-    objectclass: groupOfUniqueNames
-    objectclass: top
-    owner: cn=admin,dc=ibm,dc=com
-    uniquemember: uid=digitaliam,ou=People,dc=digital,dc=com
-    
-    dn: cn=digitaldeployer,ou=Groups,dc=digital,dc=com
-    changetype: add
-    cn: digitaldeployer
-    objectclass: groupOfUniqueNames
-    objectclass: top
-    owner: cn=admin,dc=ibm,dc=com
-    uniquemember: uid=digitaldeployer,ou=People,dc=digital,dc=com
-    
-    dn: cn=digitalaccounting,ou=Groups,dc=digital,dc=com
-    changetype: add
-    cn: digitalaccounting
-    objectclass: groupOfUniqueNames
-    objectclass: top
-    owner: cn=admin,dc=ibm,dc=com
-    uniquemember: uid=digitalaccounting,ou=People,dc=digital,dc=com
-
-
     # acme
     dn: ou=Groups,dc=acme,dc=com
     changetype: add
@@ -157,13 +58,13 @@ data:
     cn: acmeadmin
     mail: acmeadmin@acme.com
     userpassword: password
-    
+
     dn: cn=acmeadmin,ou=Groups,dc=acme,dc=com
     changetype: add
     cn: acmeadmin
     objectclass: groupOfUniqueNames
     objectclass: top
-    owner: cn=admin,dc=ibm,dc=com
+    owner: cn=admin,dc=acme,dc=com
     uniquemember: uid=acmeadmin,ou=People,dc=acme,dc=com
 
 ---
@@ -174,7 +75,7 @@ metadata:
   labels:
     app: openldap
   name: openldap
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   ports:
     - port: 389
@@ -187,7 +88,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: openldap-admin
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   ports:
   - port: 80
@@ -200,7 +101,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openldap
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
   labels:
     app: openldap
 spec:
@@ -242,11 +143,11 @@ spec:
             - name: LDAP_LOG_LEVEL
               value: "256"
             - name: LDAP_ORGANISATION
-              value: "demo"
+              value: "{{ ldap_installconfig_json.ldap_organization}}"
             - name: LDAP_DOMAIN
-              value: "{{ ldap_domain }}"
+              value: "{{ ldap_installconfig_json.ldap_domain }}"
             - name: LDAP_ADMIN_PASSWORD
-              value: "{{ ldap_admin_password }}"
+              value: "{{ ldap_installconfig_json.ldap_admin_password }}"
             - name: LDAP_REMOVE_CONFIG_AFTER_SETUP
               value: "false"
       volumes:
@@ -269,7 +170,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: openldap-admin
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   replicas: 1
   selector:
@@ -296,7 +197,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: openldap
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
   labels:
     app: openldap
 spec:
@@ -311,7 +212,7 @@ kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
   name: openldap-admin
-  namespace: {{ ldap_namespace }}
+  namespace: {{ ldap_installconfig_json.ldap_namespace }}
 spec:
   to:
     kind: Service
