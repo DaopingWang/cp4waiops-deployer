@@ -37,7 +37,7 @@
   loop:
     - {
         ldap_template: "./templates/ldap/install-ldap-acme.j2",
-        ldap_namespace: "openldap-acme",
+        ldap_namespace: "openldapacme",
         ldap_domain: "acme.com",
         ldap_base: "dc=acme,dc=com",
         ldap_admin_password: password,
@@ -46,7 +46,7 @@
       }
     - {
         ldap_template: "./templates/ldap/install-ldap-digital.j2",
-        ldap_namespace: "openldap-digital",
+        ldap_namespace: "openldapdigital",
         ldap_domain: "digital.com",
         ldap_base: "dc=digital,dc=com",
         ldap_admin_password: password,
