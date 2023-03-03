@@ -39,12 +39,12 @@
         # ldap base
         ldap_base: dc=ibm,dc=com
         # ldap admin password
-        ldap_admin_password: P4ssw0rd!
+        ldap_admin_password: password
         # Ldap password for all users
-        ldap_user_password: P4ssw0rd!
+        ldap_user_password: password
         # ldap namespace
         ldap_namespace: openldap
         project: cp4waiops
         WAIOPS_STORAGE_CLASS_FILE: ibmc-file-gold-gid
 
-        # admin is cn=admin,dc=ibm,dc=com:P4ssw0rd!
+        # admin is cn=admin,dc=ibm,dc=com:password

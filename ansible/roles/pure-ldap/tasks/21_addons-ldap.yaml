@@ -46,7 +46,8 @@
 - name: LDAP -               🚀 Install OpenLDAP
   community.kubernetes.k8s:
     state: present
-    template: ./templates/ldap/install-ldap-persistent.j2
+    #template: ./templates/ldap/install-ldap-persistent.j2
+    template: ./templates/ldap/install-ldap-rku-demo.j2
   #when: INSTALL_LDAP == true
 
 # --------------------------------------------------------------------------------------------------------------------------------------

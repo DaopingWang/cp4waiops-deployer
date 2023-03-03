@@ -31,13 +31,13 @@
 # Install OpenLDAP
 - name: 📥  21_addons-ldap
   include_tasks: 21_addons-ldap.yaml
-# Create Service Accoutn and USER
-- name: 📥   22_addons-user
-  include_tasks: 22_addons-user.yaml
+# # Create Service Accoutn and USER
+# - name: 📥   22_addons-user
+#   include_tasks: 22_addons-user.yaml
 
-# ---------------------------------------------------------------------------------------------------------------------------------------------------"
-# POSTINSTALL TASKS
-# ---------------------------------------------------------------------------------------------------------------------------------------------------"
-# Register LDAP Users
-- name: 📥  25-post-ldap-register
-  include_tasks: 25-post-ldap-register.yaml
+# # ---------------------------------------------------------------------------------------------------------------------------------------------------"
+# # POSTINSTALL TASKS
+# # ---------------------------------------------------------------------------------------------------------------------------------------------------"
+# # Register LDAP Users
+# - name: 📥  25-post-ldap-register
+#   include_tasks: 25-post-ldap-register.yaml
