@@ -45,6 +45,6 @@
         # # ldap namespace
         # ldap_namespace: openldap
         project: cp4waiops
-        WAIOPS_STORAGE_CLASS_FILE: ibmc-file-gold-gid
+        WAIOPS_STORAGE_CLASS_FILE: ocs-storagecluster-cephfs
 
         # admin is cn=admin,dc=ibm,dc=com:password
